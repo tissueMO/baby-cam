@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    build: web
+    ports:
+      - 80:80
+      - 1935:1935
+    tmpfs:
+      - /tmp
+  app:
+    build: app
+    ports:
+      - 3000:3000
