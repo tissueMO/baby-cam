@@ -1,18 +1,40 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <title>BabyCam</title>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="/css/style.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.1.0/dist/css/coreui.min.css" rel="stylesheet"
+    crossorigin="anonymous">
+  <link href="css/style.css" rel="stylesheet">
+  <link rel="icon" href="img/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
 </head>
+
 <body>
-  <video id="video" class="video" controls muted autoplay></video>
-  <div class="cry-indicator-wrapper">
-    ここに泣き声インジケーターを出す
+  <div class="d-flex flex-column h-100">
+    <!-- エラーメッセージ -->
+    <div class="js-error alert alert-danger mb-0 d-none" role="alert">
+      配信ストリームが一時停止しています。自動復旧されるまでこのままお待ち下さい。。。
+    </div>
+
+    <!-- 泣き声インジケーター -->
+    <div class="progress">
+      <div class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+    </div>
+
+    <!-- 配信ビューアー -->
+    <div class="flex-fill">
+      <video id="video" class="video" controls muted autoplay></video>
+    </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.1.0/dist/js/coreui.bundle.min.js"
+    crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script src="/js/main.js"></script>
+  <script src="js/main.js"></script>
 </body>
+
 </html>
