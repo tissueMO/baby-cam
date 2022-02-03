@@ -6,36 +6,40 @@ document.addEventListener('DOMContentLoaded', async () => {
   let timer = null;
 
   console.info('HLSサポート:', Hls.isSupported());
-  document.querySelector(`.js-hls-${Hls.isSupported() ? 'enabled' : 'disabled'}`).classList.remove('d-none');
 
-  if (Hls.isSupported()) {
-    loadStream(hls, video);
+  // 再生成功時
+  video.addEventListener('play', () => {
+    document.querySelector('.js-error').classList.add('d-none');
+    if (timer !== null) {
+      clearInterval(timer);
+    }
+  });
 
-    hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-
-    // HLSサポート版のみ自動再復旧に対応
-    hls.on(Hls.Events.ERROR, (_, data) => {
-      console.info('HLS-ERROR:', data);
-      if (data.fatal) {
-        document.querySelector('.js-error').classList.remove('d-none');
-        if (timer === null) {
-          timer = setInterval(() => loadStream(hls, video), 5000);
-        }
-      }
-    });
-    hls.on(Hls.Events.FRAG_LOADED, () => {
-      document.querySelector('.js-error').classList.add('d-none');
-      if (timer !== null) {
-        clearInterval(timer);
-      }
-    });
-
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+  // HLS非サポート環境 (iPhone Safari 向け)
+  if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = videoUrl;
+    return;
   }
-});
+  // HLS非サポート環境 (再生不可)
+  if (!Hls.isSupported()) {
+    return;
+  }
 
-const loadStream = (hls, video) => {
+  // HLSサポート環境 (自動再復旧にも対応)
+  document.querySelector(`.js-hls-enabled`).classList.remove('d-none');
   hls.loadSource(videoUrl);
   hls.attachMedia(video);
-};
+  hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+  hls.on(Hls.Events.ERROR, (_, data) => {
+    console.warn('HLS-ERROR:', data);
+    if (data.fatal) {
+      document.querySelector('.js-error').classList.remove('d-none');
+      if (timer === null) {
+        timer = setInterval(() => {
+          hls.loadSource(videoUrl);
+          hls.attachMedia(video);
+        }, 5000);
+      }
+    }
+  });
+});
