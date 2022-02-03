@@ -11,22 +11,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (Hls.isSupported()) {
     loadStream(hls, video);
 
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      video.play();
-      document.querySelector('.js-error').classList.add('d-none');
-      if (timer !== null) {
-        clearInterval(timer);
-      }
-    });
+    hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
 
     // HLSサポート版のみ自動再復旧に対応
     hls.on(Hls.Events.ERROR, (_, data) => {
       console.info('HLS-ERROR:', data);
-      if (['levelLoadError', 'manifestLoadError'].includes(data.details)) {
+      if (data.fatal) {
         document.querySelector('.js-error').classList.remove('d-none');
         if (timer === null) {
           timer = setInterval(() => loadStream(hls, video), 5000);
         }
+      }
+    });
+    hls.on(Hls.Events.FRAG_LOADED, () => {
+      document.querySelector('.js-error').classList.add('d-none');
+      if (timer !== null) {
+        clearInterval(timer);
       }
     });
 
