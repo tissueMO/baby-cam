@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
       video.play();
+      document.querySelector('.js-error').classList.add('d-none');
       if (timer !== null) {
         clearInterval(timer);
       }
