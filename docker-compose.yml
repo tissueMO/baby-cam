@@ -5,11 +5,20 @@ services:
     ports:
       - 80:80
       - 1935:1935
+    volumes:
+      - ./web/contents:/usr/share/nginx/html
     tmpfs:
       - /tmp
+    environment:
+      STREAM_HOST: rebooter:3000
   app:
     build: app
     ports:
       - 3000:3000
   rebooter:
     build: rebooter
+    tty: true
+    ports:
+      - 3001:3000
+    volumes:
+      - ./rebooter/src:/usr/src/app

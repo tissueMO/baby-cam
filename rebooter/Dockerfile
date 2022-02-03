@@ -1,10 +1,9 @@
-FROM mcr.microsoft.com/playwright:latest
-
-ENV VIEWER_URL http://web
+FROM node:16-alpine
 
 WORKDIR /usr/src/app
-
 ADD src /usr/src/app
 RUN yarn install
 
-CMD bash -c "node index.js"
+EXPOSE 3000
+
+CMD ["yarn", "start"]

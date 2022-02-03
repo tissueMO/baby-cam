@@ -17,7 +17,8 @@
   <div class="d-flex flex-column h-100">
     <!-- エラーメッセージ -->
     <div class="js-error alert alert-danger mb-0 d-none" role="alert">
-      配信ストリームが一時停止しています。自動復旧されるまでこのままお待ち下さい。。。
+      <span class="js-hls-disabled d-none">配信ストリームが停止しています。ページをリロードして下さい。</span>
+      <span class="js-hls-enabled d-none">配信ストリームが一時停止しています。自動復旧されるまでこのままお待ち下さい。</span>
     </div>
 
     <!-- 泣き声インジケーター -->
@@ -26,7 +27,7 @@
     </div>
 
     <!-- 配信ビューアー -->
-    <div class="flex-fill">
+    <div class="flex-fill align-self-center">
       <video id="video" class="video" controls muted autoplay></video>
     </div>
   </div>
