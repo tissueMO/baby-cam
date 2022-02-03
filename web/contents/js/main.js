@@ -32,11 +32,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = videoUrl;
-    try {
-      await video.play();
-    } catch (e) {
-      document.querySelector('.js-error').classList.remove('d-none');
-    }
   }
 });
 
