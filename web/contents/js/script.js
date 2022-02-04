@@ -101,13 +101,13 @@ const applyProgressBar = (selector, value) => {
     max: Number.parseInt(progressBar.dataset.warnmax),
   };
 
-  ['bg-success', 'bg-warn', 'bg-danger']
+  ['bg-success', 'bg-warning', 'bg-danger']
     .forEach(c => progressBar.classList.remove(c));
 
   if (okRange.min <= value && value <= okRange.max) {
     progressBar.classList.add('bg-success');
   } else if (warnRange.min <= value && value <= warnRange.max) {
-    progressBar.classList.add('bg-warn');
+    progressBar.classList.add('bg-warning');
   } else {
     progressBar.classList.add('bg-danger');
   }
