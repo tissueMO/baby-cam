@@ -1,10 +1,12 @@
-FROM node:16
+FROM node:16-alpine
 
-WORKDIR /app
+ENV SWITCHBOT_API_TOKEN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENV SWITCHBOT_METER_DEVICE_ID xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-COPY . /app
-RUN yarn
+WORKDIR /usr/src/app
+ADD src /usr/src/app
+RUN yarn install
 
 EXPOSE 3000
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]

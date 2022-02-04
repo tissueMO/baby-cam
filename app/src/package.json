@@ -3,5 +3,17 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "axios": "^0.25.0",
+    "cron": "^1.8.2",
+    "uuid": "^8.3.2",
+    "ws": "^8.4.2"
+  },
+  "devDependencies": {
+    "wscat": "^5.1.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
 }

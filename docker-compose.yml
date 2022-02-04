@@ -13,8 +13,14 @@ services:
       STREAM_HOST: rebooter:3000
   app:
     build: app
+    tty: true
     ports:
       - 3000:3000
+    volumes:
+      - ./app/src:/usr/src/app
+    env_file:
+      - ./app/.env
+    command: sh
   rebooter:
     build: rebooter
     tty: true
