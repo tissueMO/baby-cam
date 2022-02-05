@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (data.type === 'meter') {
       // 気温
       applyProgressBar('.js-temperature-bar', data.body.temperature);
-      document.querySelector('.js-temperature-value').textContent = `${data.body.temperature}`;
+      document.querySelector('.js-temperature-value').textContent = `${data.body.temperature.toFixed(1)}`;
 
       // 湿度
       applyProgressBar('.js-humidity-bar', data.body.humidity);

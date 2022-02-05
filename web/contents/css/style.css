@@ -32,3 +32,8 @@ body {
   height: 2.5rem;
   opacity: 0.3;
 }
+
+.progress-bar.meter-babycry {
+  transition: width .5s ease;
+  transition-duration: 0.5s;
+}
