@@ -28,3 +28,9 @@ services:
       - 3001:3000
     volumes:
       - ./rebooter/src:/usr/src/app
+  cry-client:
+    build: cry-client
+    tty: true
+    volumes:
+      - ./cry-client/src:/usr/src/app
+    command: sh

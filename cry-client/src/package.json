@@ -1,0 +1,10 @@
+{
+  "name": "cry-client",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "naudiodon": "^2.3.6"
+  }
+}
