@@ -5,6 +5,10 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "naudiodon": "^2.3.6"
+    "naudiodon": "^2.3.6",
+    "pcm-util": "^3.0.0"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
