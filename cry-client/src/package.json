@@ -6,9 +6,13 @@
   "private": true,
   "dependencies": {
     "naudiodon": "^2.3.6",
-    "pcm-util": "^3.0.0"
+    "pcm-util": "^3.0.0",
+    "ws": "^8.4.2"
   },
   "scripts": {
     "start": "node index.js"
+  },
+  "devDependencies": {
+    "wscat": "^5.1.0"
   }
 }

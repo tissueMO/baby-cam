@@ -11,13 +11,18 @@ webSocketServer.on('connection', (ws) => {
   console.info(`[WebSocket] 接続: ID=${id}, RemoteAddress=${ws._socket.remoteAddress}, ClientsCount=${webSocketServer.clients.size}`);
   ws.on('close', () => console.info(`[WebSocket] 切断: ID=${id}, ClientsCount=${webSocketServer.clients.size}`));
 
-  // 最新の温湿度状況を送る
+  // すぐに最新の温湿度状況を配信
   if (latestMeterData !== null) {
     ws.send(JSON.stringify(latestMeterData));
   }
-});
 
-// TODO: マイクのデシベルを計算してリアルタイムに配信
+  // 任意のクライアントからデータを受信したら受信元を除くすべてのクライアントに転送
+  ws.on('message', data => webSocketServer.clients.forEach(client => {
+    if (ws !== client) {
+      client.send(data);
+    }
+  }));
+});
 
 // 定期的に温湿度状況を配信
 let latestMeterData = null;

@@ -1,8 +1,19 @@
 const { AudioIO, SampleFormat16Bit } = require('naudiodon');
 const pcm = require('pcm-util');
+const { WebSocket } = require('ws');
 
 const scores = [];
 let currentTimestamp = null;
+
+const webSocketClient = new WebSocket(process.env.WEBSOCKET_HOST, {
+  port: Number.parseInt(process.env.WEBSOCKET_PORT),
+});
+webSocketClient
+  .on('open', () => console.info('[WebSocket] 接続開始'))
+  .on('close', () => {
+    console.error('[WebSocket] 切断');
+    process.exit(1);
+  });
 
 const io = new AudioIO({
   inOptions: {
@@ -20,7 +31,11 @@ io.on('data', (chunk) => {
     currentTimestamp = chunk.timestamp;
     console.log(scores);
 
-    // TODO: App へ scores を送信
+    // Webサーバーに送信
+    webSocketClient.send(JSON.stringify({
+      type: 'cry',
+      body: scores,
+    }));
 
     scores.splice(0);
   }
