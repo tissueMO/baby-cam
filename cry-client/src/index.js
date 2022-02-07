@@ -27,13 +27,13 @@ io.on('data', (chunk) => {
   // 1秒単位でバッファリング
   if (chunk.timestamp !== currentTimestamp) {
     currentTimestamp = chunk.timestamp;
-    console.log(scores);
 
     // Webサーバーに送信
-    webSocketClient.send(JSON.stringify({
+    const data = JSON.stringify({
       type: 'cry',
       body: scores,
-    }));
+    });
+    webSocketClient.send(data);
 
     scores.splice(0);
   }

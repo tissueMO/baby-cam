@@ -17,9 +17,9 @@ webSocketServer.on('connection', (ws) => {
   }
 
   // 任意のクライアントからデータを受信したら受信元を除くすべてのクライアントに転送
-  ws.on('message', (e) => webSocketServer.clients.forEach(client => {
+  ws.on('message', (data) => webSocketServer.clients.forEach(client => {
     if (ws !== client) {
-      client.send(e.data);
+      client.send(data.toString());
     }
   }));
 });
