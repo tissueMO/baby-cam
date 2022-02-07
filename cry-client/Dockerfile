@@ -1,7 +1,6 @@
 FROM node:16-alpine
 
-ENV WEBSOCKET_HOST ws://localhost/
-ENV WEBSOCKET_PORT 3000
+ENV WEBSOCKET_HOST ws://app:3000/
 
 RUN apk add --update python3 make g++ libexecinfo-dev libexecinfo libasound2-dev \
   && rm -rf /var/cache/apk/*

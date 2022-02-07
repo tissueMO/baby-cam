@@ -5,9 +5,7 @@ const { WebSocket } = require('ws');
 const scores = [];
 let currentTimestamp = null;
 
-const webSocketClient = new WebSocket(process.env.WEBSOCKET_HOST, {
-  port: Number.parseInt(process.env.WEBSOCKET_PORT),
-});
+const webSocketClient = new WebSocket(process.env.WEBSOCKET_HOST);
 webSocketClient
   .on('open', () => console.info('[WebSocket] 接続開始'))
   .on('close', () => {
