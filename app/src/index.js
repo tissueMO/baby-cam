@@ -3,6 +3,13 @@ const { Server } = require('ws');
 const { CronJob } = require('cron');
 const { v4: uuid } = require('uuid');
 
+const cryDataQueue = [];
+const crySegmentCount = 10;
+const crySegmentCountStartRate = 0.5;
+const crySegmentCountEndRate = 1.0;
+const cryThresholdDecibel = 55;
+let cryStartedTime = null;
+
 // WebSocket サーバー始動
 const port = 3000;
 const webSocketServer = new Server({ port }, () => console.info(`[WebSocket] ポート #${port} で待ち受けを開始します...`));
@@ -16,12 +23,43 @@ webSocketServer.on('connection', (ws) => {
     ws.send(JSON.stringify(latestMeterData));
   }
 
-  // 任意のクライアントからデータを受信したら受信元を除くすべてのクライアントに転送
-  ws.on('message', (data) => webSocketServer.clients.forEach(client => {
-    if (ws !== client) {
-      client.send(data.toString());
+  // 泣き状況を受信元を除くすべてのクライアントにブロードキャスト
+  ws.on('message', (data) => {
+    const payload = JSON.parse(data.toString());
+
+    if (payload.type === 'cry') {
+      cryDataQueue.unshift(payload.body.reduce((max, score) => Math.max(max, score.db), 0));
+      cryDataQueue.splice(crySegmentCount);
+
+      if (cryDataQueue.length >= crySegmentCount) {
+        const overCount = cryDataQueue.reduce((count, db) => count += (db > cryThresholdDecibel ? 1 : 0), 0);
+
+        // 泣き判定: 開始
+        const start = ((overCount / crySegmentCount) >= crySegmentCountStartRate);
+        if (!cryStartedTime && start) {
+          cryStartedTime = new Date();
+        }
+
+        // 泣き判定: 終了
+        const end = (((crySegmentCount - overCount) / crySegmentCount) >= crySegmentCountEndRate);
+        if (cryStartedTime && end) {
+          cryStartedTime = null;
+        }
+      }
+
+      webSocketServer.clients.forEach(client => {
+        if (ws !== client) {
+          client.send(JSON.stringify({
+            type: 'cry',
+            body: {
+              startedTime: cryStartedTime?.getTime() ?? null,
+              scores: payload.body,
+            },
+          }));
+        }
+      });
     }
-  }));
+  });
 });
 
 // 定期的に温湿度状況を配信

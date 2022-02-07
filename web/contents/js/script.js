@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 /**
  * リアルタイム状況更新
  */
+let cryStartedTime = null;
+let cryTimer = null;
 document.addEventListener('DOMContentLoaded', () => {
   const socket = new WebSocket(`ws://${location.hostname}:${Number.parseInt(location.port) + 1}`);
 
@@ -67,9 +69,38 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('.js-humidity-value').textContent = `${data.body.humidity}`;
     }
 
-    // レベルメーター
-    if (data.type === 'level') {
+    // 泣き状況
+    if (data.type === 'cry') {
+      const started = data.body.startedTime !== null;
+      const color = started ? 'warning' : 'success';
 
+      // 0.5秒ごとにカードとバーを更新
+      applyProgressBar('.js-babycry-bar', data.body.scores[0].peak * 10000, color);
+      setTimeout(() => {
+        applyProgressBar('.js-babycry-bar', data.body.scores[Number.parseInt(data.body.scores.length / 2)].peak * 10000, color);
+        if (started) {
+          document.querySelector('.js-babycry-card').classList.toggle('bg-danger');
+        }
+      }, 500);
+
+      // アラート開始
+      if (started && cryStartedTime === null) {
+        cryStartedTime = data.body.startedTime;
+        cryTimer = setInterval(() => {
+          const deltaTime = Math.floor((new Date() - new Date(cryStartedTime)) / 1000);
+          const seconds = ('00' + (deltaTime % 60)).slice(-2);
+          const minutes = ('00' + Math.floor(deltaTime / 60)).slice(-2);
+          document.querySelector('.js-babycry-value').textContent = `${minutes}:${seconds}`;
+        }, 1000);
+      }
+
+      // アラート停止
+      if (!started && cryStartedTime !== null) {
+        cryStartedTime = null;
+        clearInterval(cryTimer);
+        document.querySelector('.js-babycry-card').classList.remove('bg-danger');
+        document.querySelector('.js-babycry-value').textContent = '--:--';
+      }
     }
   });
 });
@@ -78,8 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
  * プログレスバーを更新します。
  * @param {string} selector
  * @param {number} value
+ * @param {string} color
  */
-const applyProgressBar = (selector, value) => {
+const applyProgressBar = (selector, value, color = null) => {
   const progressBar = document.querySelector(selector);
 
   // プログレスバー内の現在位置を決定
@@ -104,6 +136,10 @@ const applyProgressBar = (selector, value) => {
   ['bg-success', 'bg-warning', 'bg-danger']
     .forEach(c => progressBar.classList.remove(c));
 
+  if (color !== null) {
+    progressBar.classList.add(`bg-${color}`);
+    return;
+  }
   if (okRange.min <= value && value <= okRange.max) {
     progressBar.classList.add('bg-success');
   } else if (warnRange.min <= value && value <= warnRange.max) {
