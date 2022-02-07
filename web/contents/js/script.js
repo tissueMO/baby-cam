@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 再生成功時
   video.addEventListener('play', () => {
-    document.querySelector('.js-error').classList.add('d-none');
+    document.querySelector('.js-error').classList.remove('show');
     if (timer !== null) {
       clearInterval(timer);
     }
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   hls.on(Hls.Events.ERROR, (_, data) => {
     console.warn('HLS-ERROR:', data);
     if (data.fatal) {
-      document.querySelector('.js-error').classList.remove('d-none');
+      document.querySelector('.js-error').classList.add('show');
       if (timer === null) {
         timer = setInterval(() => {
           hls.loadSource(videoUrl);
@@ -148,3 +148,14 @@ const applyProgressBar = (selector, value, color = null) => {
     progressBar.classList.add('bg-danger');
   }
 };
+
+/**
+ * インジケーターのトグルボタン
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.js-indicator-toggle').addEventListener('click', () => {
+    document.querySelector('.js-indicators').classList.toggle('d-none');
+    document.querySelector('.js-video-wrapper').classList.toggle('align-items-center');
+    document.querySelector('.js-video-wrapper').classList.toggle('align-items-start');
+  });
+});
