@@ -30,10 +30,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     video.src = videoUrl;
 
     // 配信不具合発生時に自動で再復旧
-    video.addEventListener('stalled', () => {
+    const reload = () => {
       document.querySelector('.js-error').classList.add('show');
       timer ??= setInterval(() => video.load(), 5000);
-    });
+    };
+    video.addEventListener('error', reload);
+    video.addEventListener('stalled', reload);
 
     return;
   }
@@ -86,9 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
       applyProgressBar('.js-babycry-bar', data.body.scores[0].peak * 10000, color);
       setTimeout(() => {
         applyProgressBar('.js-babycry-bar', data.body.scores[Number.parseInt(data.body.scores.length / 2)].peak * 10000, color);
-        if (started) {
-          document.querySelector('.js-babycry-card').classList.toggle('bg-danger');
-        }
       }, 500);
 
       // アラート開始
@@ -99,15 +98,17 @@ document.addEventListener('DOMContentLoaded', () => {
           const seconds = ('00' + (deltaTime % 60)).slice(-2);
           const minutes = ('00' + Math.floor(deltaTime / 60)).slice(-2);
           document.querySelector('.js-babycry-value').textContent = `${minutes}:${seconds}`;
+          document.querySelector('.js-babycry-card').classList.toggle('crying');
         }, 1000);
       }
 
       // アラート停止
       if (!started && cryStartedTime !== null) {
-        cryStartedTime = null;
         clearInterval(cryTimer);
-        document.querySelector('.js-babycry-card').classList.remove('bg-danger');
+        cryTimer = null;
+        cryStartedTime = null;
         document.querySelector('.js-babycry-value').textContent = '--:--';
+        document.querySelector('.js-babycry-card').classList.remove('crying');
       }
     }
   });

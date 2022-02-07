@@ -26,9 +26,15 @@ body {
   opacity: 0.3;
 }
 
-.progress-bar.meter-babycry {
+.babycry-card {
+  transition: background-color 1s ease;
+}
+.babycry-card.crying {
+  background-color: #f007;
+}
+
+.meter-babycry {
   transition: width .5s ease;
-  transition-duration: 0.5s;
 }
 
 .indicator-toggle {
