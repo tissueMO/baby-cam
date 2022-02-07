@@ -59,10 +59,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 /**
  * リアルタイム状況更新
  */
-let cryStartedTime = null;
-let cryTimer = null;
 document.addEventListener('DOMContentLoaded', () => {
+  startReceiveData();
+});
+
+/**
+ * WebSocket経由でリアルタイムな状況更新を行います。
+ */
+const startReceiveData = () => {
   const socket = new WebSocket(`ws://${location.hostname}:${Number.parseInt(location.port) + 1}`);
+  let cryStartedTime = null;
+  let cryTimer = null;
 
   socket.addEventListener('message', (e) => {
     const data = JSON.parse(e.data);
@@ -112,7 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-});
+
+  // 切断されたら自動で再接続
+  socket.addEventListener('close', () => {
+    console.warn('[WebSocket] 切断');
+    setTimeout(() => startReceiveData(), 1000);
+  });
+};
 
 /**
  * プログレスバーを更新します。
