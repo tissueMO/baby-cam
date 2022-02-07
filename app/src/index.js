@@ -5,9 +5,9 @@ const { v4: uuid } = require('uuid');
 
 const cryDataQueue = [];
 const crySegmentCount = 10;
-const crySegmentCountStartRate = 0.5;
+const crySegmentCountStartRate = 0.75;
 const crySegmentCountEndRate = 1.0;
-const cryThresholdDecibel = 55;
+const cryThresholdDecibel = 57;
 let cryStartedTime = null;
 
 // WebSocket サーバー始動
