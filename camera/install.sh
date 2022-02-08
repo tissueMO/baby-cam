@@ -28,7 +28,7 @@ yarn
 
 # 最新版のPortAudioをビルドしてNode.jsプロジェクトに組み込む
 cd /usr/local/src
-rf -rf /usr/local/src/portaudio
+rm -rf /usr/local/src/portaudio
 git clone https://git.assembla.com/portaudio.git
 cd /usr/local/src/portaudio
 ./configure
