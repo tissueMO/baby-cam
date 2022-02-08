@@ -4,7 +4,7 @@
 ## Summary
 
 ベッドに寝かせた赤ちゃんを遠隔監視するためのソリューションです。  
-映像によるリアルタイム配信に加え、部屋の湿度・温度や赤ちゃんが泣いているかどうかを可視化できます。  
+映像によるリアルタイム配信に加え、部屋の気温・湿度や赤ちゃんが泣いているかどうかを可視化できます。  
 
 
 ## Architecture
@@ -45,7 +45,7 @@ WebSocketサーバーとして以下の役割を担います。
   - 気温と湿度はSwitchBotのAPI経由で取得します。
 
 
-## Dependenc側
+## Dependency
 
 - Raspberry Pi 3 Model B+
 - Raspberry Pi OS (32 bit)
@@ -89,11 +89,11 @@ WebSocketサーバーとして以下の役割を担います。
      - [/usr/local/src/baby-cam/camera/config/environment/babycam-cry-client](camera/config/environment/babycam-cry-client.example)
          - `WEBSOCKET_HOST`: アプリケーションサーバーのWebSocketホスト名 (例: `ws://example.com:3000`)
          - `BABYCRY_AUDIO_SOURCE`: 泣き状況判定用のUSBマイクデバイスID
-           - 配信用オーディオソースとは別デバイスを指定する必要があり、 `arecord -l` コマンドによって得られるIDとは異なります。
+           - 配信用オーディオソースとは別のデバイスを指定する必要があり、 `arecord -l` コマンドによって得られるIDとは異なります。
            - 以下のコマンドによって確認できます。(予め `yarn install` を実行しておく必要があります)  
              ```bash
              $ cd /usr/local/src/baby-cam/camera/cry-client/src
-             $ yarn check
+             $ yarn devices
              ```
 6. インストールスクリプトを実行します。  
     ```bash

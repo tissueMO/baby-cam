@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "check": "node check.js"
+    "devices": "node devices.js"
   },
   "devDependencies": {
     "wscat": "^5.1.0"
