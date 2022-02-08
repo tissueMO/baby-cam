@@ -3,8 +3,8 @@ Description = Baby Monitor
 After = systemd-networkd-wait-online.service
 
 [Service]
-ExecStart = /usr/local/src/baby-cam/camera/babycam-start.sh
-ExecStop = /usr/local/src/baby-cam/camera/babycam-stop.sh
+ExecStart = /usr/local/src/baby-cam/camera/start.sh
+ExecStop = /usr/local/src/baby-cam/camera/stop.sh
 Restart = always
 RestartSec = 10
 StartLimitBurst = 10
