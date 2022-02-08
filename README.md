@@ -85,6 +85,7 @@ WebSocketサーバーとして以下の役割を担います。
             - `arecord -l` コマンドによって確認できます。
         - `BABYCAM_VIDEO_SOURCE`: 配信用ビデオソース名 (例: `/dev/video0`)
             - `v4l2-ctl --list-devices` コマンドによって確認できます。 
+        - `BABYCAM_VIDEO_SIZE`: 配信用ビデオ解像度 (例: `640x360`)
         - `BABYCAM_STREAM_HOST`: 配信先RTMPサーバーホスト名
      - [/usr/local/src/baby-cam/camera/config/environment/babycam-cry-client](camera/config/environment/babycam-cry-client.example)
          - `WEBSOCKET_HOST`: アプリケーションサーバーのWebSocketホスト名 (例: `ws://example.com:3000`)

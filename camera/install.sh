@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-$clone_dir=/usr/local/src/baby-cam
+clone_dir=/usr/local/src/baby-cam
 
 if [ ! -d $clone_dir ]; then
   echo "リポジトリーを $clone_dir にクローンして下さい。"
