@@ -18,7 +18,7 @@ const io = new AudioIO({
     channelCount: 1,
     sampleFormat: SampleFormat16Bit,
     sampleRate: 44100,
-    deviceId: 1,
+    deviceId: process.env.BABYCRY_AUDIO_SOURCE,
     closeOnError: false
   },
 });

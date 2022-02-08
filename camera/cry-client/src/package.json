@@ -10,7 +10,8 @@
     "ws": "^8.4.2"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "check": "node check.js"
   },
   "devDependencies": {
     "wscat": "^5.1.0"

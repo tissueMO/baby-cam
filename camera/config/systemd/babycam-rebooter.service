@@ -1,0 +1,12 @@
+[Unit]
+Description = Baby Monitor Rebooter
+After = systemd-networkd-wait-online.service
+
+[Service]
+WorkingDirectory = /usr/local/src/baby-cam/camera/rebooter/src
+ExecStart = yarn start
+Restart = always
+Type = simple
+
+[Install]
+WantedBy = multi-user.target

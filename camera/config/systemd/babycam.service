@@ -1,0 +1,15 @@
+[Unit]
+Description = Baby Monitor
+After = systemd-networkd-wait-online.service
+
+[Service]
+ExecStart = /usr/local/src/baby-cam/camera/babycam-start.sh
+ExecStop = /usr/local/src/baby-cam/camera/babycam-stop.sh
+Restart = always
+RestartSec = 10
+StartLimitBurst = 10
+Type = simple
+EnvironmentFile=/etc/default/babycam
+
+[Install]
+WantedBy = multi-user.target
