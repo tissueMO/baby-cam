@@ -33,7 +33,7 @@ cd /usr/local/src/portaudio
 ./configure
 make clean
 make
-cp ./lib/.libs/libportaudio.so.2 $clone_dir/cry-client/src/node_modules/naudiodon/build/Release/
+cp ./lib/.libs/libportaudio.so.2 $clone_dir/camera/cry-client/src/node_modules/naudiodon/build/Release/
 
 # デーモン設定
 chmod +x $clone_dir/camera/*.sh
