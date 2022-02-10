@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "UNLICENSED",
   "private": true,
+  "type": "module",
   "dependencies": {
     "naudiodon": "^2.3.6",
     "pcm-util": "^3.0.0",
