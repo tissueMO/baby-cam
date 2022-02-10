@@ -1,4 +1,4 @@
-const { AudioLevelBuffer } = require('./audio-level-buffer');
+const AudioLevelBuffer = require('./audio-level-buffer');
 const { WebSocket } = require('ws');
 const { AudioIO, SampleFormat16Bit } = require('naudiodon');
 

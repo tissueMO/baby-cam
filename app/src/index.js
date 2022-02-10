@@ -1,5 +1,5 @@
-const { Meter } = require('./meter');
-const { CryHandler } = require('./cry');
+const Meter = require('./meter');
+const CryHandler = require('./cry');
 const { Server } = require('ws');
 const { CronJob } = require('cron');
 const { v4: uuid } = require('uuid');

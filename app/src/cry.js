@@ -1,7 +1,7 @@
 /**
  * 泣き状況ハンドラー
  */
-export class CryHandler {
+class CryHandler {
   /**
    * コンストラクター
    * @param {*} size セグメントサイズ
@@ -64,3 +64,5 @@ export class CryHandler {
     };
   }
 }
+
+module.exports = CryHandler;

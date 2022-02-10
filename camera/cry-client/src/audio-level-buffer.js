@@ -3,7 +3,7 @@ const pcm = require('pcm-util');
 /**
  * オーディオレベルバッファー
  */
-export class AudioLevelBuffer {
+class AudioLevelBuffer {
   /**
    * コンストラクター
    */
@@ -61,3 +61,5 @@ export class AudioLevelBuffer {
     return { db, rms, peak };
   }
 }
+
+module.exports = AudioLevelBuffer;

@@ -3,7 +3,7 @@ const axios = require('axios');
 /**
  * 温湿度計
  */
-export class Meter {
+class Meter {
   /**
    * コンストラクター
    */
@@ -49,3 +49,5 @@ export class Meter {
     return this._data;
   }
 }
+
+module.exports = Meter;
