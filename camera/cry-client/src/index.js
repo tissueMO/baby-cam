@@ -4,7 +4,7 @@ const { AudioIO, SampleFormat16Bit } = require('naudiodon');
 
 const audioLevelBuffer = new AudioLevelBuffer();
 
-(new WebSocket(process.env.WEBSOCKET_HOST))
+const socket = (new WebSocket(process.env.WEBSOCKET_HOST))
   .on('open', () => console.info('[WebSocket] 接続開始'))
   .on('close', () => {
     console.error('[WebSocket] 切断');
@@ -23,7 +23,7 @@ const audioLevelBuffer = new AudioLevelBuffer();
 }))
   .on('data', (chunk) => {
     if (audioLevelBuffer.updateTimestamp(chunk)) {
-      webSocketClient.send(JSON.stringify({
+      socket.send(JSON.stringify({
         type: 'cry',
         body: audioLevelBuffer.flush(),
       }));
