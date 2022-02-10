@@ -29,7 +29,7 @@ class Meter {
    * 最新のデータを取得して返却します。
    * @returns {Object}
    */
-  fetch () {
+  async fetch () {
     const { data } = await axios.get(`https://api.switch-bot.com/v1.0/devices/${process.env.SWITCHBOT_METER_DEVICE_ID}/status`, {
       headers: { Authorization: process.env.SWITCHBOT_API_TOKEN },
     });

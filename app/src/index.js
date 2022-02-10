@@ -37,6 +37,6 @@ server.on('connection', (socket) => {
 
 // 定期的に温湿度状況を更新
 new CronJob('0 0/5 * * * *', async () => {
-  const data = meter.fetch();
+  const data = await meter.fetch();
   server.clients.forEach(client => client.send(JSON.stringify(data)));
 }, null, true, 'Asia/Tokyo', null, true);
