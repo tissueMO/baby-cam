@@ -64,6 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
+ * インジケーターのトグルボタン
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.js-indicator-toggle').addEventListener('click', () => {
+    document.querySelector('.js-indicators').classList.toggle('d-none');
+    document.querySelector('.js-video-wrapper').classList.toggle('align-items-center');
+    document.querySelector('.js-video-wrapper').classList.toggle('align-items-start');
+  });
+});
+
+/**
  * WebSocket経由でリアルタイムな状況更新を行います。
  */
 const startReceiveData = () => {
@@ -170,14 +181,3 @@ const applyProgressBar = (selector, value, color = null) => {
     progressBar.classList.add('bg-danger');
   }
 };
-
-/**
- * インジケーターのトグルボタン
- */
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.js-indicator-toggle').addEventListener('click', () => {
-    document.querySelector('.js-indicators').classList.toggle('d-none');
-    document.querySelector('.js-video-wrapper').classList.toggle('align-items-center');
-    document.querySelector('.js-video-wrapper').classList.toggle('align-items-start');
-  });
-});

@@ -1,19 +1,18 @@
-const { AudioIO, SampleFormat16Bit } = require('naudiodon');
-const pcm = require('pcm-util');
+const { AudioLevelBuffer } = require('./audio-level-buffer');
 const { WebSocket } = require('ws');
+const { AudioIO, SampleFormat16Bit } = require('naudiodon');
 
-const scores = [];
-let currentTimestamp = null;
+const audioLevelBuffer = new AudioLevelBuffer();
 
-const webSocketClient = new WebSocket(process.env.WEBSOCKET_HOST);
-webSocketClient
+(new WebSocket(process.env.WEBSOCKET_HOST))
   .on('open', () => console.info('[WebSocket] 接続開始'))
   .on('close', () => {
     console.error('[WebSocket] 切断');
     process.exit(1);
   });
 
-const io = new AudioIO({
+// オーディオレベルを1秒単位でバッファリングしてAppサーバーに送信
+(new AudioIO({
   inOptions: {
     channelCount: 1,
     sampleFormat: SampleFormat16Bit,
@@ -21,37 +20,14 @@ const io = new AudioIO({
     deviceId: process.env.BABYCRY_AUDIO_SOURCE,
     closeOnError: false
   },
-});
-
-io.on('data', (chunk) => {
-  // 1秒単位でバッファリング
-  if (chunk.timestamp !== currentTimestamp) {
-    currentTimestamp = chunk.timestamp;
-
-    // Webサーバーに送信
-    const data = JSON.stringify({
-      type: 'cry',
-      body: scores,
-    });
-    webSocketClient.send(data);
-
-    scores.splice(0);
-  }
-
-  // 現在のチャンクの音量を計算
-  const buffer = pcm.toAudioBuffer(chunk).getChannelData(0);
-  const peak = Math.max(...buffer.map(d => Math.abs(d)));
-  if (!Number.isFinite(peak)) {
-    return;
-  }
-  const rms = Math.sqrt(
-    buffer
-      .map(d => d * d)
-      .reduce((sum, d) => sum + d, 0) / buffer.length
-  );
-  const db = 20 * Math.log10(rms / 20e-6);
-
-  scores.push({ db, rms, peak });
-});
-
-io.start();
+}))
+  .on('data', (chunk) => {
+    if (audioLevelBuffer.updateTimestamp(chunk)) {
+      webSocketClient.send(JSON.stringify({
+        type: 'cry',
+        body: audioLevelBuffer.flush(),
+      }));
+    }
+    audioLevelBuffer.push(chunk);
+  })
+  .start();
