@@ -6,7 +6,7 @@
           <div class="row">
             <!-- 泣き声インジケーター -->
             <div class="col-12 col-sm-4 col-md-12">
-              <div class="card m-2 card-indicator-cry" :class="crying">
+              <div class="card m-2 card-indicator-cry" :class="{ crying: cryingHighlight }">
                 <div class="card-body">
                   <div class="text-medium-emphasis text-center card-icon">
                     <i class="fas fa-baby"></i>
@@ -130,7 +130,7 @@ export default {
       visibleIndicators: true,
       socket: null,
       cryTimer: null,
-      crying: false,
+      cryingHighlight: false,
       cryTime: null,
       temperature: null,
       humidity: null,
@@ -262,22 +262,22 @@ export default {
       setTimeout(() => this.updateIndicatorBar('cry', body.scores[Number.parseInt(body.scores.length / 2)].peak * 10000, color), 500);
 
       // アラート開始
-      if (started && !this.crying) {
-        this.crying = true;
+      if (started && this.cryTimer === null) {
         this.cryTimer = setInterval(() => {
           const deltaTime = Math.floor((new Date() - new Date(body.startedTime)) / 1000);
           const seconds = ('00' + (deltaTime % 60)).slice(-2);
           const minutes = ('00' + Math.floor(deltaTime / 60)).slice(-2);
           this.cryTime = `${minutes}:${seconds}`;
+          this.cryingHighlight = !this.cryingHighlight;
         }, 1000);
       }
 
       // アラート停止
-      if (!started && this.crying) {
+      if (!started && this.cryTimer !== null) {
         clearInterval(this.cryTimer);
         this.cryTimer = null;
         this.cryTime = null;
-        this.crying = false;
+        this.cryingHighlight = false;
       }
     },
 

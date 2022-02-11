@@ -1,15 +1,15 @@
 [Unit]
-Description = Baby Monitor Cry Client
+Description = Baby Monitor Audio-Level Sender
 After = systemd-networkd-wait-online.service
 
 [Service]
-WorkingDirectory = /usr/local/src/baby-cam/camera/cry-client/src
+WorkingDirectory = /usr/local/src/baby-cam/camera/level-sender/src
 ExecStart = yarn start
 Restart = always
 RestartSec = 10
 StartLimitBurst = 10
 Type = simple
-EnvironmentFile=/etc/default/babycam-cry-client
+EnvironmentFile=/etc/default/babycam-level-sender
 
 [Install]
 WantedBy = multi-user.target
