@@ -115,7 +115,8 @@ WebSocketサーバーとして以下の役割を担います。
 ※同一Dockerコンテナー内でRTMPサーバーとWebサーバーを同居させています。  
 
 1. [web](./web) をDockerビルドします。
-2. 環境変数の設定に `REBOOTER_HOST` (配信元マシン側で待ち受けるビデオストリーム配信障害発生時のリブート要求口) と `APP_HOST` (アプリケーションサーバーのホスト名) を加えます。
+    - ビルド引数に `APP_HOST` (アプリケーションサーバーのホスト名) を加えます。
+2. 環境変数の設定に `REBOOTER_HOST` (配信元マシン側で待ち受けるビデオストリーム配信障害発生時のリブート要求口) を加えます。
 3. 公開ポートの設定に `80` (HTTP) と `1935` (RTMP) を加えます。
 4. Dockerコンテナーを起動します。
 
@@ -124,7 +125,7 @@ WebSocketサーバーとして以下の役割を担います。
 
 1. [app](./app) をDockerビルドします。
 2. 環境変数の設定に `SWITCHBOT_API_TOKEN` と `SWITCHBOT_METER_DEVICE_ID` を加えます。
-  - Docker-Composeを使用する場合は [.env](./app/.env.example) ファイルを作成します。
+    - Docker-Composeを使用する場合は [.env](./app/.env.example) ファイルを作成します。
 3. 公開ポートの設定に `3000` (Node.js) を加えます。
 4. Dockerコンテナーを起動します。
 

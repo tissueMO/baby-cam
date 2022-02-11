@@ -2,7 +2,6 @@
 FROM tiangolo/nginx-rtmp:latest AS dev
 
 ENV REBOOTER_HOST rebooter:3000
-ENV APP_HOST localhost:3000
 
 # Node.js をインストール
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash \
@@ -25,10 +24,12 @@ WORKDIR /usr/share/nginx/src
 COPY src .
 RUN yarn
 
-CMD [ "yarn", "dev" ]
+CMD ["yarn", "dev"]
 
 # 本番ステージ
 FROM dev AS prod
+
+ARG APP_HOST localhost:3000
 
 WORKDIR /usr/share/nginx/src
 RUN mkdir -p /usr/share/nginx/html/ \

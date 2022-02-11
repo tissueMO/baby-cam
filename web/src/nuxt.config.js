@@ -50,7 +50,6 @@ export default {
   },
 
   publicRuntimeConfig: {
-    REBOOTER_HOST: process.env.REBOOTER_HOST,
     APP_HOST: process.env.APP_HOST,
     VIDEO_PATH: '/live/stream.m3u8',
   },
