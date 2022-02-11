@@ -60,12 +60,12 @@ WebSocketサーバーとして以下の役割を担います。
 - WebSocket
 - Node.js
   - [app](app/src/package.json)
-  - [cry-client](cry-client/src/package.json)
+  - [level-sender](level-sender/src/package.json)
   - [rebooter](rebooter/src/package.json)
-- [hls.js](https://github.com/video-dev/hls.js/)
-- [Bootstrap](https://github.com/twbs/bootstrap)
-- [CoreUI](https://coreui.io/)
-- [FontAwesome](https://fontawesome.com/)
+  - [web](web/src/package.json)
+    - [Bootstrap](https://github.com/twbs/bootstrap)
+    - [CoreUI](https://coreui.io/)
+    - [FontAwesome](https://fontawesome.com/)
 
 
 ## Setup
@@ -87,13 +87,13 @@ WebSocketサーバーとして以下の役割を担います。
             - `v4l2-ctl --list-devices` コマンドによって確認できます。 
         - `BABYCAM_VIDEO_SIZE`: 配信用ビデオ解像度 (例: `640x360`)
         - `BABYCAM_STREAM_HOST`: 配信先RTMPサーバーホスト名
-     - [/usr/local/src/baby-cam/camera/config/environment/babycam-cry-client](camera/config/environment/babycam-cry-client.example)
+     - [/usr/local/src/baby-cam/camera/config/environment/babycam-level-sender](camera/config/environment/babycam-level-sender.example)
          - `WEBSOCKET_HOST`: アプリケーションサーバーのWebSocketホスト名 (例: `ws://example.com:3000`)
          - `BABYCRY_AUDIO_SOURCE`: 泣き状況判定用のUSBマイクデバイスID
            - 配信用オーディオソースとは別のデバイスを指定する必要があり、 `arecord -l` コマンドによって得られるIDとは異なります。
            - 以下のコマンドによって確認できます。(予め `yarn install` を実行しておく必要があります)  
              ```bash
-             $ cd /usr/local/src/baby-cam/camera/cry-client/src
+             $ cd /usr/local/src/baby-cam/camera/level-sender/src
              $ yarn devices
              ```
 6. インストールスクリプトを実行します。  
@@ -105,7 +105,7 @@ WebSocketサーバーとして以下の役割を担います。
 8. 各種デーモンが起動していることを確認します。  
     ```bash
     $ sudo systemctl status babycam
-    $ sudo systemctl status babycam-cry-client
+    $ sudo systemctl status babycam-level-sender
     $ sudo systemctl status babycam-rebooter
     ```
 
@@ -115,7 +115,7 @@ WebSocketサーバーとして以下の役割を担います。
 ※同一Dockerコンテナー内でRTMPサーバーとWebサーバーを同居させています。  
 
 1. [web](./web) をDockerビルドします。
-2. 環境変数の設定に `REBOOTER_HOST` (配信元マシン側で待ち受けるビデオストリーム配信障害発生時のリブート要求口) を加えます。
+2. 環境変数の設定に `REBOOTER_HOST` (配信元マシン側で待ち受けるビデオストリーム配信障害発生時のリブート要求口) と `APP_HOST` (アプリケーションサーバーのホスト名) を加えます。
 3. 公開ポートの設定に `80` (HTTP) と `1935` (RTMP) を加えます。
 4. Dockerコンテナーを起動します。
 
@@ -125,7 +125,7 @@ WebSocketサーバーとして以下の役割を担います。
 1. [app](./app) をDockerビルドします。
 2. 環境変数の設定に `SWITCHBOT_API_TOKEN` と `SWITCHBOT_METER_DEVICE_ID` を加えます。
   - Docker-Composeを使用する場合は [.env](./app/.env.example) ファイルを作成します。
-3. 公開ポートの設定に `3000` (Node.js) を加え、ホスト側ポートをWebサーバーのHTTP公開ポート+1の番号で設定します。
+3. 公開ポートの設定に `3000` (Node.js) を加えます。
 4. Dockerコンテナーを起動します。
 
 

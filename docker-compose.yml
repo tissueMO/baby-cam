@@ -27,9 +27,9 @@ services:
     tty: true
     volumes:
       - ./camera/rebooter/src:/usr/src/app
-  cry-client:
-    build: camera/cry-client
+  level-sender:
+    build: camera/level-sender
     tty: true
     volumes:
-      - ./camera/cry-client/src:/usr/src/app
+      - ./camera/level-sender/src:/usr/src/app
     command: sh

@@ -11,8 +11,8 @@ if [ ! -f $clone_dir/camera/config/environment/babycam ]; then
   echo "$clone_dir/camera/config/environment/babycam を作成して下さい。"
   exit 1
 fi
-if [ ! -f $clone_dir/camera/config/environment/babycam-cry-client ]; then
-  echo "$clone_dir/camera/config/environment/babycam-cry-client を作成して下さい。"
+if [ ! -f $clone_dir/camera/config/environment/babycam-level-sender ]; then
+  echo "$clone_dir/camera/config/environment/babycam-level-sender を作成して下さい。"
   exit 1
 fi
 
@@ -21,7 +21,7 @@ apt install -y \
   ffmpeg libasound2-dev python3 make g++ libasound2-dev
 
 # Node.jsプロジェクトをセットアップ
-cd $clone_dir/camera/cry-client/src
+cd $clone_dir/camera/level-sender/src
 yarn
 cd $clone_dir/camera/rebooter/src
 yarn
@@ -34,14 +34,14 @@ cd /usr/local/src/portaudio
 ./configure
 make clean
 make
-cp ./lib/.libs/libportaudio.so.2 $clone_dir/camera/cry-client/src/node_modules/naudiodon/build/Release/
+cp ./lib/.libs/libportaudio.so.2 $clone_dir/camera/level-sender/src/node_modules/naudiodon/build/Release/
 
 # デーモン設定
 chmod +x $clone_dir/camera/*.sh
 cp $clone_dir/camera/config/systemd/* /etc/systemd/system/
 cp $clone_dir/camera/config/environment/* /etc/default/
 systemctl enable babycam
-systemctl enable babycam-cry-client
+systemctl enable babycam-level-sender
 systemctl enable babycam-rebooter
 
 echo "Completed."
