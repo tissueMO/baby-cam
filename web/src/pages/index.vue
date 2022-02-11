@@ -105,7 +105,13 @@
 
     <!-- エラーメッセージ -->
     <div class="position-fixed top-0 end-0 p-3 error-toast">
-      <div v-if="hasError" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true">
+      <div
+        class="toast fade"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        :class="{ show: hasError }"
+      >
         <div class="toast-header text-white bg-danger border-0">
           <strong class="me-auto">通信エラー</strong>
         </div>
@@ -326,19 +332,21 @@ export default {
     startVideoStreamAutoResume (...params) {
       const interval = 5000;
 
+      /** @type HTMLVideoElement */
+      const video = this.$refs.video;
+
       if (this.canPlayVideoStreamDirectly) {
         // HLS非サポート環境 (iOS Safari 向け)
-        /** @type HTMLVideoElement */
-        const video = this.$refs.video;
-        this.videoStreamAutoResumeTimer ??=
-          setInterval(() => video.load(), interval);
+        this.videoStreamAutoResumeTimer ??= setInterval(() => video.load(), interval);
         this.hasError = true;
       } else {
         // HLSサポート環境
         const [_, data] = params;
         if (data.fatal) {
-          this.videoStreamAutoResumeTimer ??=
-            setInterval(() => this.hls.loadSource(this.$config.VIDEO_PATH), interval);
+          this.videoStreamAutoResumeTimer ??= setInterval(() => {
+            this.hls.loadSource(this.$config.VIDEO_PATH);
+            this.hls.attachMedia(video);
+          }, interval);
           this.hasError = true;
         }
       }
