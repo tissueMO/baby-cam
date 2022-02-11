@@ -1,16 +1,17 @@
 version: '3'
 services:
   web:
-    build: web
+    build:
+      context: web
+      target: dev
     ports:
       - 80:80
-      - 1935:1935
     volumes:
-      - ./web/contents:/usr/share/nginx/html
-    tmpfs:
-      - /tmp
+      - ./web/src:/usr/share/nginx/src
     environment:
-      STREAM_HOST: rebooter:3000
+      REBOOTER_HOST: rebooter:3000
+      APP_HOST: localhost:3000
+    working_dir: /usr/share/nginx/src
   app:
     build: app
     tty: true
@@ -22,15 +23,13 @@ services:
       - ./app/.env
     command: sh
   rebooter:
-    build: rebooter
+    build: camera/rebooter
     tty: true
-    ports:
-      - 3001:3000
     volumes:
-      - ./rebooter/src:/usr/src/app
+      - ./camera/rebooter/src:/usr/src/app
   cry-client:
-    build: cry-client
+    build: camera/cry-client
     tty: true
     volumes:
-      - ./cry-client/src:/usr/src/app
+      - ./camera/cry-client/src:/usr/src/app
     command: sh

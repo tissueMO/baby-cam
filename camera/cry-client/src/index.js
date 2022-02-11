@@ -17,7 +17,7 @@ const socket = (new WebSocket(process.env.WEBSOCKET_HOST))
     channelCount: 1,
     sampleFormat: SampleFormat16Bit,
     sampleRate: 44100,
-    deviceId: process.env.BABYCRY_AUDIO_SOURCE,
+    deviceId: Number.parseInt(process.env.BABYCRY_AUDIO_SOURCE),
     closeOnError: false
   },
 }))

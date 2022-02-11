@@ -1,3 +1,4 @@
 *.tar
 node_modules/
 .env
+dist/
