@@ -132,6 +132,12 @@ WebSocketサーバーとして以下の役割を担います。
 4. Dockerコンテナーを起動します。
 
 
+## Reference
+
+- [ICOOON MONO](https://icooon-mono.com/)
+  - このリポジトリーで使用している Favicon の著作権は上記サイトの TopeconHeroes 様に帰属します。
+
+
 ## Author
 
 [tissueMO](https://github.com/tissueMO)
