@@ -6,10 +6,12 @@
 ベッドに寝かせた赤ちゃんを遠隔監視するためのソリューションです。  
 映像によるリアルタイム配信に加え、部屋の気温・湿度や赤ちゃんが泣いているかどうかを可視化できます。  
 
+![babycam](https://user-images.githubusercontent.com/20965271/153599000-08d18c2b-2980-448f-b15f-bd3c58337ba4.jpg)  
+
 
 ## Architecture
 
-![architecture](https://user-images.githubusercontent.com/20965271/153109502-21d66e6b-6811-4b75-9f77-17c4e4fba025.png)
+![architecture](https://user-images.githubusercontent.com/20965271/153109502-21d66e6b-6811-4b75-9f77-17c4e4fba025.png)  
 
 
 ### (Raspberry Pi) 配信元マシン
@@ -18,16 +20,16 @@
 
 - ビデオストリーム配信用プロセス (FFmpeg)
 - ボリュームレベル配信用プロセス (Node.js)
-- ビデオストリーム配信障害発生時のリブート要求待ち受け用サーバープロセス (Node.js)
-  - ビデオストリームの配信が停止する障害は原因不明。  
-    予期せぬタイミングでUSBデバイスが応答しなくなる現象でリブートにより解消されることが判っています。  
-    また、この現象はより高い解像度設定で動作させることで発生確率が高まることが判っています。  
+- **ビデオストリーム配信障害発生時のリブート要求待ち受け用サーバープロセス (Node.js)**
+  - **ビデオストリームの配信が停止する障害は原因不明。**  
+    **予期せぬタイミングでUSBデバイスが応答しなくなる現象でリブートにより解消されることが判っています。**  
+    **また、この現象はより高い解像度設定で動作させることで発生確率が高まることが判っています。**  
 
 
 ### RTMPサーバー
 
 配信元マシンから受け取ったビデオストリームをRTMPで配信します。  
-バックグラウンドでビデオストリーム配信障害監視用のデーモンプロセスを走らせ、配信が停止されると配信元に対しリブート要求を投げます。  
+**バックグラウンドでビデオストリーム配信障害監視用のデーモンプロセスを走らせ、配信が停止されると配信元に対しリブート要求を投げます。**  
 
 
 ### Webサーバー
@@ -48,20 +50,20 @@ WebSocketサーバーとして以下の役割を担います。
 ## Dependency
 
 - Raspberry Pi 3 Model B+
-- Raspberry Pi OS (32 bit)
-  - Bash
-  - systemd
-  - FFmpeg
-    - Alsa
-    - V4L2 (Video for Linux 2)
+  - Raspberry Pi OS (32 bit)
+    - Bash
+    - systemd
+    - FFmpeg
+      - Alsa
+      - V4L2 (Video for Linux 2)
 - Docker
 - [Nginx](https://nginx.org/en/)
 - [SwitchBot Meter](https://www.switchbot.jp/products/switchbot-meter)
 - WebSocket
 - Node.js
   - [app](app/src/package.json)
-  - [level-sender](level-sender/src/package.json)
-  - [rebooter](rebooter/src/package.json)
+  - [level-sender](camera/level-sender/src/package.json)
+  - [rebooter](camera/rebooter/src/package.json)
   - [web](web/src/package.json)
     - [Bootstrap](https://github.com/twbs/bootstrap)
     - [CoreUI](https://coreui.io/)
