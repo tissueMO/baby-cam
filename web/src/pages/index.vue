@@ -130,7 +130,21 @@ import Hls from 'hls.js';
 export default {
   data () {
     return {
-      hls: new Hls(),
+      hls: new Hls({
+        // シークバーから過去に巻き戻せないようにする
+        backBufferLength: 0,
+
+        // セグメント長に合わせたタイムアウト設定
+        manifestLoadingTimeOut: 4000,
+        manifestLoadingMaxRetry: 5,
+        manifestLoadingMaxRetryTimeout: 4000,
+        levelLoadingTimeOut: 4000,
+        levelLoadingMaxRetry: 5,
+        levelLoadingMaxRetryTimeout: 4000,
+        fragLoadingTimeOut: 4000,
+        fragLoadingMaxRetry: 5,
+        fragLoadingMaxRetryTimeout: 4000,
+      }),
       videoStreamAutoResumeTimer: null,
       hasError: false,
       visibleIndicators: true,
@@ -216,17 +230,16 @@ export default {
         return;
       }
 
-      // HLS非サポート環境 (iOS Safari 向け)
       if (this.canPlayVideoStreamDirectly) {
+        // HLS非サポート環境 (iOS Safari 向け)
         video.src = this.$config.VIDEO_PATH;
-        return;
+      } else {
+        // HLSサポート環境
+        this.hls.attachMedia(video);
+        this.hls.on(Hls.Events.MEDIA_ATTACHED, () => this.hls.loadSource(this.$config.VIDEO_PATH));
+        this.hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+        this.hls.on(Hls.Events.ERROR, this.startVideoStreamAutoResume);
       }
-
-      // HLSサポート環境
-      this.hls.attachMedia(video);
-      this.hls.on(Hls.Events.MEDIA_ATTACHED, () => this.hls.loadSource(this.$config.VIDEO_PATH));
-      this.hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-      this.hls.on(Hls.Events.ERROR, this.startVideoStreamAutoResume);
     },
 
     /**
@@ -344,10 +357,17 @@ export default {
         const [_, data] = params;
         if (data.fatal) {
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            this.videoStreamAutoResumeTimer ??= setInterval(() => this.hls.startLoad(), interval);
+            this.videoStreamAutoResumeTimer ??=
+              setInterval(() => {
+                this.hls.detachMedia();
+                this.hls.attachMedia(video);
+              }, interval);
             this.hasError = true;
           } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-            this.videoStreamAutoResumeTimer ??= setInterval(() => this.hls.recoverMediaError(), interval);
+            this.videoStreamAutoResumeTimer ??=
+              setInterval(() => {
+                this.hls.recoverMediaError();
+              }, interval);
             this.hasError = true;
           } else {
             alert('配信ストリームの再生中に不明なエラーが発生しました。\n自動復旧できません。');
