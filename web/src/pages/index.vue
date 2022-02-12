@@ -223,8 +223,8 @@ export default {
       }
 
       // HLSサポート環境
-      this.hls.loadSource(this.$config.VIDEO_PATH);
       this.hls.attachMedia(video);
+      this.hls.on(Hls.Events.MEDIA_ATTACHED, () => this.hls.loadSource(this.$config.VIDEO_PATH));
       this.hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
       this.hls.on(Hls.Events.ERROR, this.startVideoStreamAutoResume);
     },
@@ -343,11 +343,15 @@ export default {
         // HLSサポート環境
         const [_, data] = params;
         if (data.fatal) {
-          this.videoStreamAutoResumeTimer ??= setInterval(() => {
-            this.hls.loadSource(this.$config.VIDEO_PATH);
-            this.hls.attachMedia(video);
-          }, interval);
-          this.hasError = true;
+          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            this.videoStreamAutoResumeTimer ??= setInterval(() => this.hls.startLoad(), interval);
+            this.hasError = true;
+          } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+            this.videoStreamAutoResumeTimer ??= setInterval(() => this.hls.recoverMediaError(), interval);
+            this.hasError = true;
+          } else {
+            alert('配信ストリームの再生中に不明なエラーが発生しました。\n自動復旧できません。');
+          }
         }
       }
     },
