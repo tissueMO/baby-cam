@@ -11,10 +11,16 @@ class Meter {
   #data;
 
   /**
+   * アラート通知が必要な状態になったかどうか
+   */
+  #alert;
+
+  /**
    * コンストラクター
    */
   constructor () {
     this.#data = null;
+    this.#alert = false;
   }
 
   /**
@@ -29,6 +35,35 @@ class Meter {
    */
   get hasData () {
     return this.#data !== null;
+  }
+
+  /**
+   * 論理名
+   */
+  get logicalName () {
+    return '温湿度計';
+  }
+
+  /**
+   * 通知が必要な状態であるかどうか
+   */
+  get needsNotify () {
+    // 既に通知が必要な状態になっていた場合は重複させないようにする
+    if (this.#alert) {
+      return false;
+    }
+
+    const alert = (this.#data !== null)
+      ? (
+        this.#data.body.temperature < Number.parseFloat(process.env.TEMPERATURE_NOTIFY_LOWER_THRESHOLD) ||
+        this.#data.body.temperature > Number.parseFloat(process.env.TEMPERATURE_NOTIFY_HIGHER_THRESHOLD) ||
+        this.#data.body.humidity < Number.parseFloat(process.env.HUMIDITY_NOTIFY_LOWER_THRESHOLD) ||
+        this.#data.body.humidity > Number.parseFloat(process.env.HUMIDITY_NOTIFY_HIGHER_THRESHOLD)
+      )
+      : false;
+    this.#alert = alert;
+
+    return this.#alert;
   }
 
   /**
@@ -53,6 +88,13 @@ class Meter {
     };
 
     return this.#data;
+  }
+
+  /**
+   * 状態文字列を返します。
+   */
+  toString () {
+    return (this.#data !== null) ? `温度=${this.#data.body.temperature}℃, 湿度=${this.#data.body.humidity}%` : '';
   }
 }
 

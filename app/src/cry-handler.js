@@ -27,6 +27,27 @@ class CryHandler {
   }
 
   /**
+   * 論理名
+   */
+  get logicalName () {
+    return 'Cryメーター';
+  }
+
+  /**
+   * 通知が必要な状態であるかどうか
+   */
+  get needsNotify () {
+    return this.#cryingDurationTime > Number.parseInt(process.env.CRY_NOTIFY_THRESHOLD);
+  }
+
+  /**
+   * 泣いている時間秒数
+   */
+  get #cryingDurationTime () {
+    return (this.startedTime !== null) ? ((new Date().getTime() - this.startedTime.getTime()) / 1000) : 0;
+  }
+
+  /**
    * 受信データから泣き状況をハンドルします。
    * @param {string} type 受信データタイプ
    * @param {Object} body 受信データ本体
@@ -59,9 +80,19 @@ class CryHandler {
     }
 
     return {
-      startedTime: this.startedTime?.getTime() ?? null,
-      scores,
+      type,
+      body: {
+        startedTime: this.startedTime?.getTime() ?? null,
+        scores,
+      },
     };
+  }
+
+  /**
+   * 状態文字列を返します。
+   */
+  toString () {
+    return this.needsNotify ? `${this.#cryingDurationTime}秒間泣いています。` : '正常';
   }
 }
 

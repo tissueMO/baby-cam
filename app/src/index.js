@@ -1,5 +1,6 @@
 const Meter = require('./meter');
 const CryHandler = require('./cry-handler');
+const Notify = require('./notify');
 const { Server } = require('ws');
 const { CronJob } = require('cron');
 const { v4: uuid } = require('uuid');
@@ -24,11 +25,12 @@ server.on('connection', (socket) => {
   // オーディオレベル配信元から受け取ったデータを基に泣き状況を配信
   socket.on('message', (data) => {
     const payload = JSON.parse(data.toString());
-    const handleResult = cry.handle(payload.type, { scores: payload.body });
-    if (handleResult) {
+    const result = cry.handle(payload.type, { scores: payload.body });
+    if (result) {
+      Notify.notifyIfNeeded(cry);
       server.clients.forEach((client) => {
         if (socket !== client) {
-          client.send(JSON.stringify({ type: payload.type, body: handleResult }));
+          client.send(JSON.stringify(result));
         }
       });
     }
@@ -38,5 +40,6 @@ server.on('connection', (socket) => {
 // 定期的に温湿度状況を更新
 new CronJob('0 0/5 * * * *', async () => {
   const data = await meter.fetch();
+  Notify.notifyIfNeeded(meter);
   server.clients.forEach(client => client.send(JSON.stringify(data)));
 }, null, true, 'Asia/Tokyo', null, true);
