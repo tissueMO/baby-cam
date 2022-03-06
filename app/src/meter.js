@@ -48,12 +48,11 @@ class Meter {
    * 通知が必要な状態であるかどうか
    */
   get needsNotify () {
-    // 既に通知が必要な状態になっていた場合は重複させないようにする
     if (this.#alert) {
       return false;
     }
 
-    const alert = (this.#data !== null)
+    this.#alert = (this.#data !== null)
       ? (
         this.#data.body.temperature < Number.parseFloat(process.env.TEMPERATURE_NOTIFY_LOWER_THRESHOLD) ||
         this.#data.body.temperature > Number.parseFloat(process.env.TEMPERATURE_NOTIFY_HIGHER_THRESHOLD) ||
@@ -61,7 +60,6 @@ class Meter {
         this.#data.body.humidity > Number.parseFloat(process.env.HUMIDITY_NOTIFY_HIGHER_THRESHOLD)
       )
       : false;
-    this.#alert = alert;
 
     return this.#alert;
   }

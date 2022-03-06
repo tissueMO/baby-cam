@@ -3,6 +3,11 @@
  */
 class CryHandler {
   /**
+   * アラート通知が必要な状態になったかどうか
+   */
+  #alert;
+
+  /**
    * コンストラクター
    * @param {*} size セグメントサイズ
    * @param {*} threshold 泣いているとみなすデシベル単位の閾値
@@ -17,6 +22,7 @@ class CryHandler {
 
     this.segment = [];
     this.startedTime = null;
+    this.#alert = false;
   }
 
   /**
@@ -37,14 +43,20 @@ class CryHandler {
    * 通知が必要な状態であるかどうか
    */
   get needsNotify () {
-    return this.#cryingDurationTime > Number.parseInt(process.env.CRY_NOTIFY_THRESHOLD);
+    if (this.#alert) {
+      return false;
+    }
+
+    this.#alert = this.#cryingDurationTime > Number.parseInt(process.env.CRY_NOTIFY_THRESHOLD);
+
+    return this.#alert;
   }
 
   /**
    * 泣いている時間秒数
    */
   get #cryingDurationTime () {
-    return (this.startedTime !== null) ? ((new Date().getTime() - this.startedTime.getTime()) / 1000) : 0;
+    return (this.startedTime !== null) ? Number.parseInt((new Date().getTime() - this.startedTime.getTime()) / 1000) : 0;
   }
 
   /**
@@ -92,7 +104,7 @@ class CryHandler {
    * 状態文字列を返します。
    */
   toString () {
-    return this.needsNotify ? `${this.#cryingDurationTime}秒間泣いています。` : '正常';
+    return (this.#cryingDurationTime === 0) ? '正常' : `${this.#cryingDurationTime}秒間泣いています。`;
   }
 }
 
