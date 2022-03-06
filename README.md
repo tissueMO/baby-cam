@@ -11,7 +11,7 @@
 
 ## Architecture
 
-![architecture](https://user-images.githubusercontent.com/20965271/153109502-21d66e6b-6811-4b75-9f77-17c4e4fba025.png)  
+![architecture](https://user-images.githubusercontent.com/20965271/156913253-2943e4a8-37c5-4eec-aa34-4eedc3bc6133.png)  
 
 
 ### (Raspberry Pi) 配信元マシン
@@ -46,6 +46,11 @@ WebSocketサーバーとして以下の役割を担います。
 - (To Webブラウザー) ボリュームレベル/気温/湿度を配信
   - 気温と湿度はSwitchBotのAPI経由で取得します。
 
+また、SlackのWebhook経由で通知を行います。
+
+- 一定時間赤ちゃんが泣いていることを検知した時
+- 気温と湿度が閾値を超えた時
+
 
 ## Dependency
 
@@ -68,6 +73,7 @@ WebSocketサーバーとして以下の役割を担います。
     - [Bootstrap](https://github.com/twbs/bootstrap)
     - [CoreUI](https://coreui.io/)
     - [FontAwesome](https://fontawesome.com/)
+- [Slack](https://api.slack.com/)
 
 
 ## Setup
@@ -118,7 +124,10 @@ WebSocketサーバーとして以下の役割を担います。
 
 1. [web](./web) をDockerビルドします。
     - ビルド引数に `APP_HOST` (アプリケーションサーバーのホスト名) を加えます。
-2. 環境変数の設定に `REBOOTER_HOST` (配信元マシン側で待ち受けるビデオストリーム配信障害発生時のリブート要求口) を加えます。
+2. 環境変数の設定に以下を加えます。
+    - `REBOOTER_HOST` (配信元マシン側で待ち受けるビデオストリーム配信障害発生時のリブート要求口)
+    - `REBOOTER_WARMUP` (リブート要求後の待機時間秒数)
+    - `REBOOTER_TIMEOUT` (ビデオストリーム配信を強制的にリセットさせるまでの配信停止時間秒数)
 3. 公開ポートの設定に `80` (HTTP) と `1935` (RTMP) を加えます。
 4. Dockerコンテナーを起動します。
 
@@ -126,7 +135,7 @@ WebSocketサーバーとして以下の役割を担います。
 ### アプリケーションサーバー
 
 1. [app](./app) をDockerビルドします。
-2. 環境変数の設定に `SWITCHBOT_API_TOKEN` と `SWITCHBOT_METER_DEVICE_ID` を加えます。
+2. 環境変数の設定に[必要な値](./app/.env.example)を加えます。
     - Docker-Composeを使用する場合は [.env](./app/.env.example) ファイルを作成します。
 3. 公開ポートの設定に `3000` (Node.js) を加えます。
 4. Dockerコンテナーを起動します。
