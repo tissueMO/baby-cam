@@ -5,24 +5,30 @@ const axios = require('axios');
  */
 class Meter {
   /**
+   * 一時保管用の取得データ
+   * @property {Object}
+   */
+  #data;
+
+  /**
    * コンストラクター
    */
   constructor () {
-    this._data = null;
+    this.#data = null;
   }
 
   /**
    * 直近の取得データ
    */
   get lastData () {
-    return this._data;
+    return this.#data;
   }
 
   /**
    * 取得データを保持しているかどうか
    */
   get hasData () {
-    return this._data !== null;
+    return this.#data !== null;
   }
 
   /**
@@ -38,7 +44,7 @@ class Meter {
       return;
     }
 
-    this._data = {
+    this.#data = {
       type: 'meter',
       body: {
         temperature: data.body.temperature,
@@ -46,7 +52,7 @@ class Meter {
       },
     };
 
-    return this._data;
+    return this.#data;
   }
 }
 

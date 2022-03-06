@@ -4,9 +4,10 @@ const util = require('util');
 const execAsync = util.promisify(exec);
 const app = express();
 
-app.post('/reboot', async () => {
+app.post('/reboot', (_, res) => {
   console.info('再起動します...');
-  await execAsync('reboot');
+  res.sendStatus(200);
+  execAsync('reboot');
 });
 
 app.listen(3000, '0.0.0.0', () => console.info('Expressサーバーでリクエストを待ち受けます...'));

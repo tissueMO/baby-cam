@@ -8,7 +8,10 @@ class AudioLevelBuffer {
    * コンストラクター
    */
   constructor() {
+    /** @type {number} */
     this.lastTimestamp = null;
+
+    /** @type {Array} */
     this.scores = [];
   }
 
@@ -28,7 +31,7 @@ class AudioLevelBuffer {
    * @param {Buffer} chunk
    */
   push (chunk) {
-    this.scores.push(this._calcLevelScore(chunk));
+    this.scores.push(this.#calcLevelScore(chunk));
   }
 
   /**
@@ -44,12 +47,12 @@ class AudioLevelBuffer {
    * @param {Buffer} chunk
    * @returns {Object} デシベル、実効値、ピーク値
    */
-  _calcLevelScore (chunk) {
+  #calcLevelScore (chunk) {
     const buffer = pcm.toAudioBuffer(chunk).getChannelData(0);
 
     const peak = Math.max(...buffer.map(d => Math.abs(d)));
     if (!Number.isFinite(peak)) {
-      return;
+      return null;
     }
     const rms = Math.sqrt(
       buffer
