@@ -48,11 +48,7 @@ class Meter {
    * 通知が必要な状態であるかどうか
    */
   get needsNotify () {
-    if (this.#alert) {
-      return false;
-    }
-
-    this.#alert = (this.#data !== null)
+    const abnormal = (this.#data !== null)
       ? (
         this.#data.body.temperature < Number.parseFloat(process.env.TEMPERATURE_NOTIFY_LOWER_THRESHOLD) ||
         this.#data.body.temperature > Number.parseFloat(process.env.TEMPERATURE_NOTIFY_HIGHER_THRESHOLD) ||
@@ -61,7 +57,11 @@ class Meter {
       )
       : false;
 
-    return this.#alert;
+    // 状態が切り替わった瞬間のみ反応する
+    const result = !this.#alert ? abnormal : false;
+    this.#alert = abnormal;
+
+    return result;
   }
 
   /**

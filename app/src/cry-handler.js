@@ -43,13 +43,13 @@ class CryHandler {
    * 通知が必要な状態であるかどうか
    */
   get needsNotify () {
-    if (this.#alert) {
-      return false;
-    }
+    const cryingLonger = this.#cryingDurationTime > Number.parseInt(process.env.CRY_NOTIFY_THRESHOLD);
 
-    this.#alert = this.#cryingDurationTime > Number.parseInt(process.env.CRY_NOTIFY_THRESHOLD);
+    // 状態が切り替わった瞬間のみ反応する
+    const result = !this.#alert ? cryingLonger : false;
+    this.#alert = cryingLonger;
 
-    return this.#alert;
+    return result;
   }
 
   /**
