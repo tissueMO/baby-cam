@@ -29,6 +29,9 @@ do
     send_stream_stopped
     warmup_count=1
   fi
+  if [ $count -gt 0 ] && [ $prev_count -eq 0 ]; then
+    print_log "配信が復旧しました"
+  fi
 
   # 一定時間配信が止まり続けていたら強制的に配信元へ対処を促す
   if [ $count -eq 0 ] && [ $prev_count -eq 0 ]; then
