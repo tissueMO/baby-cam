@@ -57,7 +57,7 @@
               <div class="card m-2">
                 <div class="card-body card-indicator-humidity">
                   <div class="text-medium-emphasis text-center card-icon">
-                    <i class="fas fa-percentage"></i>
+                    <i class="fas fa-tint"></i>
                   </div>
                   <div class="fs-4 fw-semibold">
                     <span v-if="humidity !== null">{{ humidity }}&percnt;</span>
