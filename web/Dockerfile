@@ -2,6 +2,8 @@
 FROM tiangolo/nginx-rtmp:latest AS dev
 
 ENV REBOOTER_HOST rebooter:3000
+ENV REBOOTER_WARMUP 180
+ENV REBOOTER_TIMEOUT 600
 
 # Node.js をインストール
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash \
