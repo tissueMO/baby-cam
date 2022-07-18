@@ -9,10 +9,10 @@ class CryHandler {
 
   /**
    * コンストラクター
-   * @param {*} size セグメントサイズ
-   * @param {*} threshold 泣いているとみなすデシベル単位の閾値
-   * @param {*} startRate 泣き始めたとみなすセグメント内の閾値越え率
-   * @param {*} endRate 泣き終えたとみなすセグメント内の閾値越え率
+   * @param {number} size セグメントサイズ
+   * @param {number} threshold 泣いているとみなすデシベル単位の閾値
+   * @param {number} startRate 泣き始めたとみなすセグメント内の閾値越え率
+   * @param {number} endRate 泣き終えたとみなすセグメント内の閾値越え率
    */
   constructor (size = 10, threshold = 57, startRate = 0.75, endRate = 1.0) {
     this.size = size;

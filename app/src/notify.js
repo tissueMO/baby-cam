@@ -5,12 +5,20 @@ const axios = require('axios');
  */
 class Notify {
   /**
+   * アラート通知を行ってもよい時刻(時)
+   */
+  static #allowedHours = [22, 23, 0, 1, 2, 3];
+
+  /**
    * 必要に応じてアラート通知を行います。
    * @param {*} handler
    * @param {Object} data
    */
   static async notifyIfNeeded (handler) {
-    if (!handler.needsNotify) {
+    if (
+      !handler.needsNotify ||
+      !this.includesTimeRange()
+    ) {
       return;
     }
 
@@ -29,6 +37,14 @@ class Notify {
     } else {
       console.warn('[通知] Slackによるアラートに失敗しました:', handler.logicalName, response.status);
     }
+  }
+
+  /**
+   * アラート通知を行ってもよい時刻かどうかを返します。
+   * @returns {boolean}
+   */
+  static includesTimeRange () {
+    return this.#allowedHours.includes(new Date().getHours());
   }
 }
 
