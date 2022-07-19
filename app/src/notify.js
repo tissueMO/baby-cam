@@ -1,4 +1,9 @@
 const axios = require('axios');
+const dayjs = require('dayjs');
+
+dayjs.extend(require('dayjs/plugin/timezone'));
+dayjs.extend(require('dayjs/plugin/utc'));
+dayjs.tz.setDefault(process.env.TZ ?? 'Asia/Tokyo');
 
 /**
  * 通知機構
@@ -44,7 +49,7 @@ class Notify {
    * @returns {boolean}
    */
   static includesTimeRange () {
-    return this.#allowedHours.includes(new Date().getHours());
+    return this.#allowedHours.includes(dayjs.tz().hour());
   }
 }
 
